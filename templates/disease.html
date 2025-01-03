@@ -1,0 +1,137 @@
+{% extends "./base.html" %} 
+{% load static %}
+{% block style %} 
+<style>
+table.dataTable thead th{
+    background-color: #2e6da4;
+        color: whitesmoke;
+}
+table.dataTable td>a{
+    text-decoration:none;
+	color:black;
+}
+table.dataTable tbody tr:hover {
+  background-color: #eee;
+}
+</style>
+{% endblock %} 
+{% block main %} 
+<nav aria-label="breadcrumb" class="mt-2">
+	{% if type == 1%}
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item align-items-center"><i class="fas fa-home"></i> <a href="{% url 'ppm:home' %}">Home</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Browse</li>
+		</ol>
+	{% else %}
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item align-items-center"><i class="fas fa-home"></i> <a href="{% url 'ppm:search' %}">Search</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Disease</li>
+		</ol>
+	{% endif %}
+</nav>
+<div class="alert alert-success" role="alert">
+	<i class="fas fa-align-justify"></i> | Total Disease: <span style="color: red">{{count.disease}}
+	</span>, Tissue/Cell: <span style="color: red">{{ count.tiss }}</span>
+</div>
+<div class="mt-2" style="margin-bottom:25px">
+	<table id="result" class="table table-bordered" style="table-layout:fixed;word-break:break-all;"></table>	
+</div>
+<div class="modal fade" id="loading-btn" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+	 aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content border-0" style="background: none;">
+			<div class="modal-body text-center" style="background: none;">
+				<div class="load">
+					<hr/>
+					<hr/>
+					<hr/>
+					<hr/>
+				</div>
+				<h2 style="color: white">Please Wait...</h2>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+<script>
+if (!String.prototype.format) {
+	String.prototype.format = function () {
+		var args = arguments;
+		return this.replace(/{(\d+)}/g, function (match, number) {
+			return typeof args[number] != 'undefined' ? args[number] : "";
+		});
+	};
+};
+$(document).ready(function() {
+    $('#result').dataTable({
+        "data": {{dataset|safe}},
+		"deferLoading": 57,
+		"autoWidth": true,
+		"processing": true,
+        "order": [[1, "desc"]],
+		"responsive": true,
+		"autoWidth": true,
+        "columns": [
+			{ "title": "Disease", "class": "features-td-left"},
+			{ "title": "Tissue/Cell","class": "features-td-left"},
+			{ "title": "DOID","class": "features-td-left"},
+            { "title": "Uniport","class": "features-td-left"},
+			{ "title": "More","class": "features-td-center"},
+        ],
+		"columnDefs":[
+			{
+			    "render": function(data, type, row){
+					if (row[2] != '-'){
+						return '<a href="https://disease-ontology.org/term/{0}/" target="_blank">'.format(row[2])+row[2]+'</a>';
+					}
+				    else{
+						return row[2];
+					}
+			    },
+                "targets": 2
+		    },
+            {
+			    "render": function(data, type, row){
+				    return '<a href="https://www.uniprot.org/uniprotkb/{0}/" target="_blank">'.format(row[3])+row[3]+'</a>';
+			    },
+				"width": "8%",
+			    "targets": 3
+		    },
+		    {
+			    "render": function(data, type, row){
+				    return '<button class="btn btn-outline-secondary btn-sm" type="button" aria-label="Submit" value="Submit" onclick="submit1(\'{0}\')">View More </button>'.format(row[0]);
+			    },
+				"width": "8%",
+			    "targets": 4
+		    },
+           {"targets": [4], "orderable": false}
+	    ]
+    });
+} );
+function submit1(uid) {
+    var myForm = document.createElement("form");
+    myForm.method = "GET";
+    myForm.action = "{% url 'ppm:more' %}";
+    var typeInput = document.createElement("input");
+    typeInput.type = "hidden";
+    typeInput.name = "type";
+    typeInput.value = "disease";
+    myForm.appendChild(typeInput);
+    var uidInput = document.createElement("input");
+    uidInput.name = "uid";
+    uidInput.type = "hidden";
+    uidInput.value = uid;
+    myForm.appendChild(uidInput);
+    document.body.appendChild(myForm);
+    myForm.submit();
+    $('#loading-btn').modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: true,
+    });
+    document.body.removeChild(myForm);
+};
+</script>
+{% endblock %}

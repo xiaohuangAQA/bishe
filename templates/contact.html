@@ -1,0 +1,151 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block main %}
+<nav aria-label="breadcrumb" class="mt-2">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item align-items-center"><i class="fas fa-home"></i> <a href="{% url 'ppm:search' %}">Search</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Protein</li>
+    </ol>
+</nav>
+<div class="alert alert-success" role="alert">
+	<h4 class="article-title">Blood-brain barrier permeability peptides prediction</h4>
+</div>
+<div class="row">
+	<div class="col-sm-8">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				Any other problems or questions, do not hesitate to fill the form below and send it to us.<br>
+				We appreciate your feedback very much.
+			</div>
+			<div class="panel-body">
+				<form action="{% url 'ppm:contact' %}" method="post"  enctype="multipart/form-data" id="form">
+				{% csrf_token %}
+					<div class="form-group">
+						<label for="exampleInputName">Your name</label>
+						<input type="text" class="form-control" name="inputName" id="inputName" required oninvalid="setCustomValidity('username is empty, Please fill in this field');" oninput="setCustomValidity('');">
+					</div>
+			
+					<div class="form-group">
+						<label for="exampleInputEmail">Email address</label>
+						<input type="email" class="form-control" id="inputEmail" name="inputEmail" required oninvalid="setCustomValidity('Email is empty Or illegal, Please fill in this field');" oninput="setCustomValidity('');">
+						<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+					</div>
+			
+					<div class="form-group">
+						<label for="exampleInputMessage">Message</label>
+						<textarea id='msg' class="form-control" name="inputMessage" rows="3" required oninvalid="setCustomValidity('Message is empty, Please fill in this field');" oninput="setCustomValidity('');"></textarea>
+					</div>
+					<div class="row form-group buttons text-center">
+						<div class="col-md-6">
+							<button class="btn btn-outline-danger" type="button" aria-label="Reset" value="Reset" style="width:100%"
+							onclick="resetForm()">Reset </button>
+						</div>
+						<div class="col-md-6">
+							<button class="btn btn-outline-success" type="button" aria-label="Submit" value="Submit" style="width:100%"
+							 onclick="submit1()">Submit </button>
+						</div>
+                    </div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-4">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				Informations about Us
+			</div>
+			<div class="panel-body">
+				<!-- <article> -->
+				<h6 class="text-justify" style="font-size:16px">Email:
+				</br>
+				<ul>
+					<li><i class="fa fa-envelope"></i>&nbsp chenweiimu@gmail.com</li>
+					<li><i class="fa fa-envelope"></i>&nbsp tangqiang.0701@gmail.com</li>
+				</ul>
+				More information about us, please check here.
+				<a target="_black" href="http://chenweilab.cn/" class="readmore">Read More &raquo;</a></h6>
+				<!-- </article> -->
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="loading-btn" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content border-0" style="background: none;">
+			<div class="modal-body text-center" style="background: none;">
+				<div class="load">
+					<hr/>
+					<hr/>
+					<hr/>
+					<hr/>
+				</div>
+				<h2 style="color: white">Please Wait...</h2>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'home/js/bootstrap-select.js' %}"></script>
+<script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'base/js/popper.min.js' %}"></script>
+<script src="{% static 'base/js/bootbox.min.js' %}"></script>
+<script>
+    var opts = {
+        lines: 15, // The number of lines to draw
+        length: 0, // The length of each line
+        width: 8, // The line thickness
+        radius: 17, // The radius of the inner circle
+        corners: 1, // Corner roundness (0..1)
+        rotate: 38, // The rotation offset
+        direction: 1, // 1: clockwise, -1: counterclockwise
+        color: '#000000', // #rgb or #rrggbb or array of colors
+        speed: 1.5, // Rounds per second
+        trail: 37, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: false, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: 'auto', // Top position relative to parent in px
+        left: 'auto' // Left position relative to parent in px
+    };
+	function submit1() {
+		var textarea = document.getElementById('msg');
+		var inputName = document.getElementById('inputName');
+		var inputEmail = document.getElementById('inputEmail');
+		textarea.value = textarea.value.trim();
+		inputName.value = inputName.value.trim();
+		inputEmail.value = inputEmail.value.trim();
+		if (textarea.checkValidity()==false){
+		    textarea.reportValidity();
+		    return;
+        }
+		if (inputName.checkValidity()==false){
+			inputName.reportValidity();
+			return;
+		}
+		if (inputEmail.checkValidity()==false){
+			inputEmail.reportValidity();
+			return;
+		}
+		document.getElementById("form").submit();
+		$('#loading-btn').modal({
+			backdrop: 'static',
+			keyboard: false,
+			show: true,
+			});
+	}
+    function resetForm() {
+        $(":input").not(":button", ":reset", "hidden", "submit").val("").removeAttr("checked").removeAttr("selected");
+    }
+    var msg = '{{msg|safe}}';
+	if (msg == 'OK'){
+		bootbox.alert({
+			message: "The email was sent successfully, we will reply as soon as possible!",
+			size: 'small'
+		});
+	}
+</script>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="shortcut icon" href="{% static 'logo.png' %}">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>deepb3p</title> 
+		<link rel="stylesheet" href="{% static 'dataTables/css/dataTables.bootstrap4.min.css' %}">
+		<link rel="stylesheet" href="{% static 'base/css/style.css' %}">
+		<link rel="stylesheet" href="{% static 'base/css/bootstrap.min.css' %}">
+		<link rel="stylesheet" href="{% static 'base/css/unicons.css' %}">
+		<link rel="stylesheet" href="{% static 'base/css/fontawesome.min.css' %}">
+        <link rel="stylesheet" href="{% static 'base/css/solid.css' %}">
+		<link rel="stylesheet" href="{% static 'base/css/load.css' %}">
+		<link rel="stylesheet" href="{% static 'home/css/bootstrap.css' %}">
+		{% block style %} 
+		{% endblock %}
+	</head>
+	<body>
+		<div class="antin-container">
+			<header class="header-area overlay">
+				<nav class="navbar navbar-expand-md navbar-dark">
+					<div class="container">
+						<a href="{% url 'ppm:home' %}" class="navbar-brand d-flex justify-content-center align-items-center">
+							<img src="{% static 'logo.png' %}" width="45" height="45"
+								class="d-inline-block justify-content-center align-items-center mr-2" alt="">
+							<span class="">deepB3P</span>
+						</a>
+						<button type="button" class="navbar-toggler collapsed" data-toggle="collapse"
+							data-target="#main-nav">
+							<span class="menu-icon-bar"></span>
+							<span class="menu-icon-bar"></span>
+							<span class="menu-icon-bar"></span>
+						</button>
+						<div id="main-nav" class="collapse navbar-collapse">
+							<ul class="navbar-nav ml-auto">
+								<li>
+									<a href="{% url 'ppm:home' %}" class="nav-item nav-link py-3" style="{{hoStyle}}">
+										<i class="fas fa-home"></i> Home </a>
+								</li>
+                                <li class="dropdown">
+                                    <a href="#" class="nav-item nav-link py-3" data-toggle="dropdown" style="{{seStyle}}">
+                                        <i class="fas fa-search"></i>
+                                            Search
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a href="{% url 'ppm:search' %}" class="dropdown-item">Predictor</a>
+                                        <a href="{% url 'ppm:search' %}" class="dropdown-item">Generator</a>
+                                    </div>
+                                </li>
+                                <li>
+									<a href="{% url 'ppm:browse' %}" class="nav-item nav-link py-3" style="{{brStyle}}">
+										<i class="fas fa-tasks"></i> Browse </a>
+								</li>
+								<li>
+									<a href="{% url 'ppm:statistics' %}" class="nav-item nav-link py-3" style="{{stStyle}}">
+										<i class="fas fa-chart-bar"></i> statistics </a>
+								</li>
+								<li>
+									<a href="{% url 'ppm:document' %}" class="nav-item nav-link py-3" style="{{doStyle}}">
+										<i class="fas fa-book"></i> Document </a>
+								</li>
+                                <li>
+									<a href="{% url 'ppm:contact' %}" class="nav-item nav-link py-3" style="{{coStyle}}">
+										<i class="fas fa-id-card"></i> Contact </a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</nav>
+			</header>
+			{% block home %} 
+			{% endblock %}
+			<div class="antin-contain">
+				<div class="container">
+				{% block main %} 
+				{% endblock %}
+				</div>	
+			</div>
+			<div class="progress-wrap">
+				<svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+					x<path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+				</svg>
+			</div>
+			<!-- Site footer -->
+			<footer class="site-footer">
+				<div class="container" id="footer-container">
+					<div class="row">
+                        <div class="col-xs-4 col-md-4 d-flex flex-column">
+							<div class="mt-auto text-left">
+							    <h6 class="copyright-text"> Contact US</h6>
+                                <p class="copyright-text"> E-mail: <font color="white">greatchen@cdutcm.edu.cn</font></p>
+                                <p class="copyright-text">Copyright &copy; 2023 All Rights Reserved by <a href="https://chenweilab.cn/" target="_blank"style="color: #ffffff;">ChenWeiLab</a>. </p>
+							</div>
+						</div>
+						<div class="col-xs-4 col-md-4 d-flex flex-column">
+							<a target="_blank" href="https://www.revolvermaps.com/livestats/57ukqfgodk5/">
+                                <img src="//rf.revolvermaps.com/h/m/a/0/ff0000/128/5/57ukqfgodk5.png" width="256" height="128" alt="Map" style="border:0;">
+                            </a>
+                        </div>
+						<div class="col-xs-4 col-md-4 d-flex flex-column">
+							<div class="mt-auto text-justify">
+							    <h6 class="copyright-text"> Citation</h6>
+                                <p class="copyright-text"> DeepB<sup>3</sup>P: A Transformer-Based Model for Identifying Blood-Brain Barrier Penetrating Peptides with Data Augmentation Using Feedback GAN</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+		<script src="{% static 'base/js/jquery.min.js' %}"></script>
+		<script src="{% static 'base/js/style.js' %}"></script>
+		<script src="{% static 'base/js/popper.min.js' %}"></script>
+		<script src="{% static 'dataTables/js/jquery.dataTables.min.js' %}"></script>
+		<script src="{% static 'dataTables/js/dataTables.bootstrap4.min.js' %}"></script>	
+		<script src="{% static 'base/js/echarts.js' %}"></script>	
+		{% block js %}
+		{% endblock %}
+	</body>
+</html>

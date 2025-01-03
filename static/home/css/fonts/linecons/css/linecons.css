@@ -1,0 +1,334 @@
+@font-face {
+    font-family: 'linecons';
+    src: url('../font/linecons.eot?24293614');
+    src: url('../font/linecons.eot?24293614#iefix') format('embedded-opentype'), url('../font/linecons.woff?24293614') format('woff'), url('../font/linecons.ttf?24293614') format('truetype'), url('../font/linecons.svg?24293614#linecons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'linecons';
+    src: url('../font/linecons.svg?24293614#linecons') format('svg');
+  }
+}
+*/
+
+[class^="linecons-"]:before,
+[class*=" linecons-"]:before {
+    font-family: "linecons";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: .2em;
+    text-align: center;
+    /* opacity: .8; */
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+    /* fix buttons height, for twitter bootstrap */
+    line-height: 1em;
+    /* Animation center compensation - margins should be symmetric */
+    /* remove if not needed */
+    margin-left: .2em;
+    /* you can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.linecons-music:before {
+    content: '\e800';
+}
+
+/* 'î €' */
+
+.linecons-search:before {
+    content: '\e801';
+}
+
+/* 'î ' */
+
+.linecons-mail:before {
+    content: '\e802';
+}
+
+/* 'î ‚' */
+
+.linecons-heart:before {
+    content: '\e803';
+}
+
+/* 'î ƒ' */
+
+.linecons-star:before {
+    content: '\e804';
+}
+
+/* 'î „' */
+
+.linecons-user:before {
+    content: '\e805';
+}
+
+/* 'î …' */
+
+.linecons-videocam:before {
+    content: '\e806';
+}
+
+/* 'î †' */
+
+.linecons-camera:before {
+    content: '\e807';
+}
+
+/* 'î ‡' */
+
+.linecons-photo:before {
+    content: '\e808';
+}
+
+/* 'î ˆ' */
+
+.linecons-attach:before {
+    content: '\e809';
+}
+
+/* 'î ‰' */
+
+.linecons-lock:before {
+    content: '\e80a';
+}
+
+/* 'î Š' */
+
+.linecons-eye:before {
+    content: '\e80b';
+}
+
+/* 'î ‹' */
+
+.linecons-tag:before {
+    content: '\e80c';
+}
+
+/* 'î Œ' */
+
+.linecons-thumbs-up:before {
+    content: '\e80d';
+}
+
+/* 'î ' */
+
+.linecons-pencil:before {
+    content: '\e80e';
+}
+
+/* 'î Ž' */
+
+.linecons-comment:before {
+    content: '\e80f';
+}
+
+/* 'î ' */
+
+.linecons-location:before {
+    content: '\e810';
+}
+
+/* 'î ' */
+
+.linecons-cup:before {
+    content: '\e811';
+}
+
+/* 'î ‘' */
+
+.linecons-trash:before {
+    content: '\e812';
+}
+
+/* 'î ’' */
+
+.linecons-doc:before {
+    content: '\e813';
+}
+
+/* 'î “' */
+
+.linecons-note:before {
+    content: '\e814';
+}
+
+/* 'î ”' */
+
+.linecons-cog:before {
+    content: '\e815';
+}
+
+/* 'î •' */
+
+.linecons-params:before {
+    content: '\e816';
+}
+
+/* 'î –' */
+
+.linecons-calendar:before {
+    content: '\e817';
+}
+
+/* 'î —' */
+
+.linecons-sound:before {
+    content: '\e818';
+}
+
+/* 'î ˜' */
+
+.linecons-clock:before {
+    content: '\e819';
+}
+
+/* 'î ™' */
+
+.linecons-lightbulb:before {
+    content: '\e81a';
+}
+
+/* 'î š' */
+
+.linecons-tv:before {
+    content: '\e81b';
+}
+
+/* 'î ›' */
+
+.linecons-desktop:before {
+    content: '\e81c';
+}
+
+/* 'î œ' */
+
+.linecons-mobile:before {
+    content: '\e81d';
+}
+
+/* 'î ' */
+
+.linecons-cd:before {
+    content: '\e81e';
+}
+
+/* 'î ž' */
+
+.linecons-inbox:before {
+    content: '\e81f';
+}
+
+/* 'î Ÿ' */
+
+.linecons-globe:before {
+    content: '\e820';
+}
+
+/* 'î  ' */
+
+.linecons-cloud:before {
+    content: '\e821';
+}
+
+/* 'î ¡' */
+
+.linecons-paper-plane:before {
+    content: '\e822';
+}
+
+/* 'î ¢' */
+
+.linecons-fire:before {
+    content: '\e823';
+}
+
+/* 'î £' */
+
+.linecons-graduation-cap:before {
+    content: '\e824';
+}
+
+/* 'î ¤' */
+
+.linecons-megaphone:before {
+    content: '\e825';
+}
+
+/* 'î ¥' */
+
+.linecons-database:before {
+    content: '\e826';
+}
+
+/* 'î ¦' */
+
+.linecons-key:before {
+    content: '\e827';
+}
+
+/* 'î §' */
+
+.linecons-beaker:before {
+    content: '\e828';
+}
+
+/* 'î ¨' */
+
+.linecons-truck:before {
+    content: '\e829';
+}
+
+/* 'î ©' */
+
+.linecons-money:before {
+    content: '\e82a';
+}
+
+/* 'î ª' */
+
+.linecons-food:before {
+    content: '\e82b';
+}
+
+/* 'î «' */
+
+.linecons-shop:before {
+    content: '\e82c';
+}
+
+/* 'î ¬' */
+
+.linecons-diamond:before {
+    content: '\e82d';
+}
+
+/* 'î ­' */
+
+.linecons-t-shirt:before {
+    content: '\e82e';
+}
+
+/* 'î ®' */
+
+.linecons-wallet:before {
+    content: '\e82f';
+}
+
+/* 'î ¯' */

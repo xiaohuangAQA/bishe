@@ -1,0 +1,34 @@
+h2 {
+    color: #00161e;
+    font-weight: lighter;
+    font-size: 1.7rem;
+    margin-top: 1.5rem;
+    margin-bottom: .5rem;
+    font-family: "Poppins", Arial, sans-serif;
+    line-height: 1.2;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+}
+
+.features-td-center {
+    text-align: center;
+}
+
+.features-icon {
+    display: inline-block;
+    vertical-align: center;
+}
+
+table tr th {
+    font-size: 1.2rem;
+}
+
+@media screen and (min-width: 480px) {
+    .pop-img {
+        max-width: 100%;
+    }
+}
+
+.pop-img {
+    max-width: calc(100vw * 0.55);
+}

@@ -1,0 +1,28 @@
+.banner .container img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+::-webkit-scrollbar {
+    background-color: #ccc;
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    /*background-color: #1A8797;*/
+    background-color: #0771B8;
+}
+
+@font-face {
+    font-family: Calibri;
+    src: url('../font/Calibri.ttf')
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('../font/poppins/Poppins-Regular.ttf')
+}
+
+/* body { */
+    /* font-family: Poppins, Calibri, Arial, sans-serif; */
+/* } */

@@ -1,0 +1,40 @@
+/*getting started page boder*/
+
+.backborder {
+    padding: 5px 0 5px 5px;
+    margin: 5px 0 5px 0;
+    border: 1px dotted #7587FF;
+    border-radius: 10px;
+}
+
+.backborder-solid {
+    padding: 5px 5px 5px 5px;
+    margin: 5px 0 5px 0;
+    border: 2px solid #7587FF;
+    border-radius: 1px;
+}
+
+.backborder-solid-1 {
+    padding: 5px 5px 5px 5px;
+    margin: 5px 0 5px 0;
+    border: 1px solid #7587FF;
+    border-radius: 1px;
+}
+
+.backborder-shadow {
+    padding: 5px 0 5px 5px;
+    margin: 5px 0 5px 0;
+    border: 1px solid #7587FF;
+    border-radius: 1px;
+    -moz-box-shadow: 2px 2px 5px #333333;
+    -webkit-box-shadow: 2px 2px 5px #333333;
+    box-shadow: 2px 2px 5px #333333;
+}
+
+.backborder-border {
+    border: solid 1px #be87ff;
+}
+
+.backborder-border-1 {
+    border: solid 5px #59008C;
+}

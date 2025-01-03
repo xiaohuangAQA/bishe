@@ -1,0 +1,334 @@
+{% extends "./base.html" %} 
+{% load static %}
+{% block style %} 
+<link rel="stylesheet" href="{% static 'home/css/xenon-core.css' %}">
+<link rel="stylesheet" href="{% static 'rcsb-molstar/rnawremolstar.css' %}">
+<style>
+html {overflow-x: hidden;}
+.panel {padding: 0 !important;}
+.panel-group .panel .panel-heading .panel-title {
+	padding: 0 !important;
+    font-weight: bolder;
+}
+.panel .panel-body {
+    padding: 10px 0 0;
+}
+.panel .panel-heading>.panel-title>a {
+	padding: 17px !important;
+    text-decoration: none;
+	border: solid 2px #00356b;
+	border-radius: 4px;
+}
+.panel-group .panel .panel-heading+.panel-collapse .panel-body {
+	margin-top: 0 !important;
+    padding: 20px;
+    border: 1px solid #9c9d9e;
+    border-top: 0 !important;
+}
+.panel .panel-heading>.panel-title>a:hover {
+	color: #00356b !important;
+}
+.panel-body>li{
+	color: black;
+}
+
+table th {
+    font-size:17px;
+	color:#343a40;
+	text-align: center;
+    background-color: #c4e3f3;
+}
+td{
+    font-size: 17px;
+	font-style: normal;
+	word-wrap:break-word;
+	word-break:break-all;
+    padding: 10px;
+    background: white;
+	border: 1px solid #ddd;
+}
+td>a{
+	text-decoration:none !important;
+	color: black;
+	cursor: pointer;
+}
+</style>
+<style>
+        #molstar-ui {
+            position: relative;
+        }
+
+        #viewer {
+            position: relative;
+            left: 10px;
+            top: 10px;
+            width: auto;
+            height: 800px;
+        }
+    </style>
+{% endblock %} 
+{% block main %} 
+<nav aria-label="breadcrumb" class="mt-2">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item align-items-center"><i class="fas fa-home" style="padding-right:15px"></i>Detail Information</li>
+        <li class="breadcrumb-item active" aria-current="page">Protein</li>
+    </ol>
+</nav>
+<div class="mt-2" style="margin-bottom:25px">
+    <div class="card border-danger mt-2" style="padding-left:15px;padding-top:15px">
+        <p style="cursor:pointer;width: 100px;" onclick="history.back(-1);">
+			<span style="font-style: normal"><img src="{% static 'common/images/back.png' %}" alt="download-search" class="small_icons" style="margin-bottom: 4px;margin-right: 7px;width: 14px;height: 14px;">
+				<b style="font-size: 16px;color: #00356b;">Go Back</b>
+			</span>
+		</p>
+		<p><b style="font-size: 22px;color: #00356b;">Basic Information</b></p>
+		<section style="margin-bottom: 0;margin-right:20px">
+			<table frame="void" width="100%" id="base_table" style="margin-bottom:15px;border: 1px solid #ddd;">
+				<tbody>
+					<tr>
+						<th style="width:15%">UniPort</th>
+						<td style="width:25%"><a href="https://www.uniprot.org/uniprotkb/{{protein.uniport_id}}/entry" target="_blank">{{protein.uniport_id}}</a></td>
+						<th style="width:15%">Protein</th>
+						<td>{{protein.protein_name}}</td>
+					</tr>
+					<tr>
+						<th>Gene</th>
+						<td>{{protein.gene_symbol}}</td>
+						<th>Organism</th>
+						<td>{{protein.organism}}</td>
+					</tr>
+					<tr>
+						<th>Entreze</th>
+						<td><a href="https://www.ncbi.nlm.nih.gov/gene/?term={{protein.entreze_id}}" target="_blank">{{protein.entreze_id}}</a></td>
+						<th>Ensembl</th>
+						<td>{{protein.ensembl_id}}</td>
+					</tr>
+					<tr>
+						<th>Status</th>
+						<td>{{protein.reviewed}}</td>
+						<th>Family</th>
+						<td>{{protein.family}}</td>
+					</tr>
+					<tr>
+						<th>Sequence</th>
+						<td colspan="3">{{protein.sequence|safe}}</td>
+					</tr>
+					<tr>
+						<th>Length</th>
+						<td colspan="3">{{protein.length}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+		<p><b style="font-size: 22px;color: #00356b;">Amino acid composition</b></p>
+		<section style="margin-bottom:15px;margin-top:15px">
+			<div id="aac" style="height:500px; background:white"></div>
+		</section>
+    </div>
+</div>
+<div class="panel-group">
+	{% if ptase %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#collapse1">
+                    PTM Sites:
+                </a>
+            </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <section style="margin-bottom: 0">
+                    <table frame="void" width="100%" style="margin-bottom:15px;border: 1px solid #ddd;">
+						<tbody>
+							<tr>
+								<th style="width:15%; padding: 10px 0">SID</th>
+								<th style="width:15%">Site</th>
+								<th style="width:5%">AA</th>
+								<th style="width:25%">PTM</th>
+								<th>Donor</th>
+								<th style="width:25%">PTase</th>
+							</tr>
+							{% for one in ptase %}
+							<tr>
+								<td style="text-align: center">{{one.2.sid}}</td>
+								<td style="text-align: center">{{one.0}}</td>
+								<td style="text-align: center">{{one.1}}</td>
+								<td style="text-align: center">{{one.2.ptm}}</td>
+								<td style="text-align: center">{{one.2.donor}}</td>
+                                <td style="text-align: center">
+                                    <a onclick="submit1('{{one.2.eid}}')" target="_blank">
+                                        {{one.2.ptase}}<i style="padding-left: 5%; color: #00356B" class="fas fa-barcode"></i>
+                                    </a>
+                                </td>
+							</tr>
+							{% endfor %}
+							<tr></tr>
+
+							</tr>
+							{% if protein.description != '-'%}
+							<tr>
+								<th>Source</th>
+								<td colspan="5">{{protein.evidence_source|safe}}</td>
+							</tr>							
+							<tr>
+								<th>Description</th>
+								<td colspan="5" style="word-break:keep-all;text-align:justify">{{protein.description}}</td>
+							</tr>
+							{% endif %}
+						</tbody>
+					</table>
+                </section>
+            </div>
+        </div>
+    </div>
+	{% endif %}
+	{% if dis %}
+	<div class="panel panel-default" style="margin-top:20px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#collapse2">
+                    Related Disease:
+                </a>
+            </h4>
+        </div>
+        <div id="collapse2" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <section style="margin-bottom: 0">
+					<table frame="void" width="100%" style="margin-bottom:15px;border: 1px solid #ddd;">
+						<tbody>
+							<tr>
+								<th style="width:15%; padding: 10px 0">SID</th>
+								<th>Disease Ontology</th>
+								<th>Tissue/Cell</th>
+								<th>DOID</th>
+							</tr>
+							{% for one in dis %}
+							<tr>
+								<td style="text-align: center">{{one.0}}</td>
+								<td style="text-align: center">{{one.1.disease_ontology}}</td>
+								<td style="text-align: center">{{one.1.tissue_cell}}</td>
+								<td style="text-align: center"><a href="https://disease-ontology.org/term/{{one.1.DO_id}}/" target="_blank">{{one.1.DO_id}}</a></td>
+							</tr>
+							<tr>
+								<th>PubMed</th>
+								<td colspan="3"><a href="https://pubmed.ncbi.nlm.nih.gov/{{one.1.pubmed_id}}/" target="_blank">{{one.1.pubmed_id}}</a></td>
+							</tr>
+							<tr>
+								<th>Description</th>
+								<td colspan="3" style="word-break:keep-all;text-align:justify">{{one.1.description}}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+                </section>
+            </div>
+        </div>
+    </div>
+	{% endif %}
+	<div class="panel panel-default" style="margin-top:20px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#collapse3">
+                    Structure:
+                </a>
+            </h4>
+        </div>
+        <div id="collapse3" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <section style="margin-bottom: 15px">
+					<div class="row" id="molstar-ui">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div id="viewer">
+							</div>
+						</div>
+					</div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="loading-btn" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+	 aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content border-0" style="background: none;">
+			<div class="modal-body text-center" style="background: none;">
+				<div class="load">
+					<hr/>
+					<hr/>
+					<hr/>
+					<hr/>
+				</div>
+				<h2 style="color: white">Please Wait...</h2>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'common/common/js/echarts.min.js' %}"></script>
+<script src="{% static 'rcsb-molstar/rnawreMolstar.js' %}"></script>
+<script>
+	jQuery(document).ready(function () {
+		var viewer = new rnawreMolstar.Viewer('viewer');
+		viewer.loadStructureFromUrl('{% static 'pdb/'%}{{protein.uniport_id}}.pdb', format='pdb');
+		var chartDom = document.getElementById('aac');
+	var myChart = echarts.init(chartDom);
+	var option;
+	option = {
+		textStyle: {
+			color: 'black',
+		},
+		tooltip: {
+			trigger: 'axis',
+			axisPointer: {
+				type: 'shadow'
+			}
+		},
+		grid: {
+			left: '2%',
+			right: '2%',
+			bottom: '2%',
+			top: '2%',
+			containLabel: true
+		},
+		xAxis: [{
+			type: 'category',
+			data: {{aac|safe}},
+			axisTick: {alignWithLabel: true},
+		}],
+		yAxis: [{
+		    type: 'value',
+		}],
+		series: [{
+			name: 'Amino acid composition',
+			type: 'bar',
+			barWidth: '25%',
+			data: {{com}},
+		}]
+	};
+	option && myChart.setOption(option);
+	});
+</script>
+<script>
+function submit1(uid) {
+    var myForm = document.createElement("form");
+    myForm.method = "GET";
+    myForm.action = "{% url 'ppm:more' %}";
+    var typeInput = document.createElement("input");
+    typeInput.type = "hidden";
+    typeInput.name = "type";
+    typeInput.value = "enzyme";
+    myForm.appendChild(typeInput);
+    var uidInput = document.createElement("input");
+    uidInput.name = "uid";
+    uidInput.type = "hidden";
+    uidInput.value = uid;
+    myForm.appendChild(uidInput);
+    document.body.appendChild(myForm);
+    myForm.submit();
+    document.body.removeChild(myForm);
+};
+</script>
+{% endblock %}

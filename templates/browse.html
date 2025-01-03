@@ -1,0 +1,316 @@
+{% extends "./base.html" %} 
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'zTree/zTreeStyle.css' %}">
+<style>
+    #browseTab li{
+        list-style-type:square;
+        color: #b70657;
+    }
+</style>
+{% endblock %}
+{% block main %} 
+<nav aria-label="breadcrumb" class="mt-2">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item align-items-center"><i class="fas fa-home"></i> <a href="{% url 'ppm:home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Browse</li>
+    </ol>
+</nav>
+<div class="mt-2" style="margin-bottom:25px">
+    <div class="card border-danger mt-2">
+        <h3 style="padding-left: 20px; font-weight: bold; color: #00356b">
+            You can browse by five categories:
+        </h3>
+        <ul id="browseTab" style="margin-left:5%; margin-top: -15px;">
+            <li style="padding-top: 20px">
+                <span style="font-weight: bold; color: #00356b">
+                    Protein Organism 
+                </span>
+            </li>
+            <li style="padding-top: 5px">
+                <span style="font-weight: bold; color: #00356b">
+                    Disease
+                </span>
+            </li>
+			<li style="padding-top: 5px">
+                <span style="font-weight: bold; color: #00356b">
+                    Enzyme
+                </span>
+            </li>
+			<li style="padding-top: 5px">
+                <span style="font-weight: bold; color: #00356b">
+                    Inhibitor
+                </span>
+            </li>
+			<li style="padding-top: 5px">
+                <span style="font-weight: bold; color: #00356b">
+                    Compound
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="mt-2" style="margin-bottom:25px">
+    <div class="card border-danger mt-2">
+        <div>
+			<ul id="treeDemo" class="ztree" style="padding:18px"></ul>
+		</div>
+    </div>
+</div>
+<div class="modal fade" id="loading-btn" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+	 aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content border-0" style="background: none;">
+			<div class="modal-body text-center" style="background: none;">
+				<div class="load">
+					<hr/>
+					<hr/>
+					<hr/>
+					<hr/>
+				</div>
+				<h2 style="color: white">Please Wait...</h2>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'home/js/bootstrap-select.js' %}"></script>
+<script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'zTree/jquery.ztree.core.min.js' %}"></script>
+<script>
+if (!String.prototype.format) {
+	String.prototype.format = function () {
+		var args = arguments;
+		return this.replace(/{(\d+)}/g, function (match, number) {
+			return typeof args[number] != 'undefined' ? args[number] : "";
+		});
+	};
+};
+var setting = {
+	view: {
+		selectedMulti: false,
+		fontCss: setFontCss,
+		dblClickExpand: false,
+	},
+	data: {
+		key: {title: "t",},
+		simpleData: {enable: true,}
+	},
+	callback: {
+		beforeClick: beforeClick,
+		beforeDblClick: beforeDblClick,
+		onClick: onClick,
+	},
+};
+var log, className = "dark";
+var qType = ['protein', 'disease', 'enzyme', 'inhibitor', 'compound'];
+var zNodes = [
+	{"id": 1, "pId": 0, "name": "By Protein", "t": "By Protein", "open": true},
+	{"id": 2, "pId": 0, "name": "By Disease", "t": "By Disease", "open": true},
+	{"id": 3, "pId": 0, "name": "By Enzyme", "t": "By Enzyme", "open": true},
+	{"id": 4, "pId": 0, "name": "By Inhibitor", "t": "By Inhibitor", "open": true},
+	{"id": 5, "pId": 0, "name": "By Compound", "t": "By Compound", "open": true},
+	<!-- protein organism -->
+	{'id': 10000, 'pId': 1, 'name': 'Organism', 't': 'By protein Organism', "open": false},
+	{'id': 10001, 'pId': 10000, 'name': 'Arabidopsis thaliana (Mouse-ear cress): 130 entries', 't': 'Arabidopsis thaliana (Mouse-ear cress)', 'y': 'protein'},
+	{'id': 10002, 'pId': 10000, 'name': 'Bos taurus (Bovine): 72 entries', 't': 'Bos taurus (Bovine)', 'y': 'protein'}, 
+	{'id': 10003, 'pId': 10000, 'name': 'Cyprinus carpio (Common carp): 129 entries', 't': 'Cyprinus carpio (Common carp)', 'y': 'protein'}, 
+	{'id': 10004, 'pId': 10000, 'name': 'Dictyostelium discoideum (Social amoeba): 78 entries', 't': 'Dictyostelium discoideum (Social amoeba)', 'y': 'protein'}, 
+	{'id': 10005, 'pId': 10000, 'name': 'Hepatitis delta virus (HDV): 1297 entries', 't': 'Hepatitis delta virus (HDV)', 'y': 'protein'}, 
+	{'id': 10006, 'pId': 10000, 'name': 'Homo sapiens (Human): 180 entries', 't': 'Homo sapiens (Human)', 'y': 'protein'}, 
+	{'id': 10007, 'pId': 10000, 'name': 'Mus musculus (Mouse): 177 entries', 't': 'Mus musculus (Mouse)', 'y': 'protein'}, 
+	{'id': 10008, 'pId': 10000, 'name': 'Rattus norvegicus (Rat): 94 entries', 't': 'Rattus norvegicus (Rat)', 'y': 'protein'}, 
+	{'id': 10009, 'pId': 10000, 'name': 'Sus scrofa (Pig): 86 entries', 't': 'Sus scrofa (Pig)', 'y': 'protein'}, 
+	{'id': 10010, 'pId': 10000, 'name': 'Others: 4785 entries', 't': 'Others', 'y': 'protein'},
+	<!-- protein family -->	
+	{'id': 11000, 'pId': 1, 'name': 'Family', 't': 'By protein Family', "open": false},
+	{'id': 11001, 'pId': 11000, 'name': 'Phosphorylase kinase alpha/beta subunit: 3825 entries', 't': 'Phosphorylase kinase alpha/beta subunit', 'y': 'protein'},
+{'id': 11002, 'pId': 11000, 'name': 'Hepatitis delta virus delta antigen: 1356 entries', 't': 'Hepatitis delta virus delta antigen', 'y': 'protein'},
+{'id': 11003, 'pId': 11000, 'name': 'Small GTPase: 769 entries', 't': 'Small GTPase', 'y': 'protein'},
+{'id': 11004, 'pId': 11000, 'name': 'Protein phosphatase 1, regulatory subunit 16A/B: 649 entries', 't': 'Protein phosphatase 1, regulatory subunit 16A/B', 'y': 'protein'},
+{'id': 11005, 'pId': 11000, 'name': 'G-protein, gamma subunit: 46 entries', 't': 'G-protein, gamma subunit', 'y': 'protein'},
+{'id': 11006, 'pId': 11000, 'name': "3'5'-cyclic nucleotide phosphodiesterase: 24 entries", 't': "3'5'-cyclic nucleotide phosphodiesterase", 'y': 'protein'},
+{'id': 11007, 'pId': 11000, 'name': 'Heavy metal binding protein HIPP-like: 24 entries', 't': 'Heavy metal binding protein HIPP-like', 'y': 'protein'},
+{'id': 11008, 'pId': 11000, 'name': 'Chaperone DnaJ: 20 entries', 't': 'Chaperone DnaJ', 'y': 'protein'},
+{'id': 11009, 'pId': 11000, 'name': 'Protein Tyrosine Phosphatase: 16 entries', 't': 'Protein Tyrosine Phosphatase', 'y': 'protein'},
+{'id': 11010, 'pId': 11000, 'name': 'Nucleosome assembly protein (NAP): 15 entries', 't': 'Nucleosome assembly protein (NAP)', 'y': 'protein'},
+{'id': 11011, 'pId': 11000, 'name': 'Membrane-anchored ubiquitin-fold protein: 13 entries', 't': 'Membrane-anchored ubiquitin-fold protein', 'y': 'protein'},
+{'id': 11012, 'pId': 11000, 'name': 'GPCR kinase: 12 entries', 't': 'GPCR kinase', 'y': 'protein'},
+{'id': 11013, 'pId': 11000, 'name': 'Pex19 protein: 11 entries', 't': 'Pex19 protein', 'y': 'protein'},
+{'id': 11014, 'pId': 11000, 'name': 'Prickle/Espinas/Testin: 10 entries', 't': 'Prickle/Espinas/Testin', 'y': 'protein'},
+{'id': 11015, 'pId': 11000, 'name': 'Paralemmin: 9 entries', 't': 'Paralemmin', 'y': 'protein'},
+{'id': 11016, 'pId': 11000, 'name': 'Synaphin: 8 entries', 't': 'Synaphin', 'y': 'protein'},
+{'id': 11017, 'pId': 11000, 'name': 'Guanine nucleotide-binding protein subunit gamma, fungal: 8 entries', 't': 'Guanine nucleotide-binding protein subunit gamma, fungal', 'y': 'protein'},
+{'id': 11018, 'pId': 11000, 'name': 'Synaptobrevin-like: 8 entries', 't': 'Synaptobrevin-like', 'y': 'protein'},
+{'id': 11019, 'pId': 11000, 'name': 'Aldehyde dehydrogenase NAD(P)-dependent: 7 entries', 't': 'Aldehyde dehydrogenase NAD(P)-dependent', 'y': 'protein'},
+{'id': 11020, 'pId': 11000, 'name': 'Competence pheromone ComX, Bacillus-type: 7 entries', 't': 'Competence pheromone ComX, Bacillus-type', 'y': 'protein'},
+{'id': 11021, 'pId': 11000, 'name': 'Heavy metal-associated isoprenylated plant: 7 entries', 't': 'Heavy metal-associated isoprenylated plant', 'y': 'protein'},
+{'id': 11022, 'pId': 11000, 'name': 'BRO1 domain-containing protein BROX: 6 entries', 't': 'BRO1 domain-containing protein BROX', 'y': 'protein'},
+{'id': 11023, 'pId': 11000, 'name': 'Heavy metal-associated isoprenylated plant protein 4/7/8/17/18/19: 6 entries', 't': 'Heavy metal-associated isoprenylated plant protein 4/7/8/17/18/19', 'y': 'protein'},
+{'id': 11024, 'pId': 11000, 'name': 'Cyclic nucleotide phosphodiesterase: 5 entries', 't': 'Cyclic nucleotide phosphodiesterase', 'y': 'protein'},
+{'id': 11025, 'pId': 11000, 'name': 'Calmodulin and Centrin Calcium-Binding Families: 4 entries', 't': 'Calmodulin and Centrin Calcium-Binding Families', 'y': 'protein'},
+{'id': 11026, 'pId': 11000, 'name': 'Type I inositol 1,4,5-trisphosphate 5-phosphatase: 4 entries', 't': 'Type I inositol 1,4,5-trisphosphate 5-phosphatase', 'y': 'protein'},
+{'id': 11027, 'pId': 11000, 'name': "Batten's disease protein Cln3: 4 entries", 't': "Batten's disease protein Cln3", 'y': 'protein'},
+{'id': 11028, 'pId': 11000, 'name': '72kDa inositol polyphosphate 5-phosphatase: 4 entries', 't': '72kDa inositol polyphosphate 5-phosphatase', 'y': 'protein'},
+{'id': 11029, 'pId': 11000, 'name': 'Heavy metal-associated isoprenylated plant protein 1/3/5/6: 4 entries', 't': 'Heavy metal-associated isoprenylated plant protein 1/3/5/6', 'y': 'protein'},
+{'id': 11030, 'pId': 11000, 'name': 'DnaJ homolog subfamily A member 1/2-like: 4 entries', 't': 'DnaJ homolog subfamily A member 1/2-like', 'y': 'protein'},
+{'id': 11031, 'pId': 11000, 'name': 'F-box/Leucine-rich repeat: 4 entries', 't': 'F-box/Leucine-rich repeat', 'y': 'protein'},
+{'id': 11032, 'pId': 11000, 'name': 'G protein-coupled receptor, rhodopsin-like: 4 entries', 't': 'G protein-coupled receptor, rhodopsin-like', 'y': 'protein'},
+{'id': 11033, 'pId': 11000, 'name': 'Fungal mating-type pheromone: 4 entries', 't': 'Fungal mating-type pheromone', 'y': 'protein'},
+{'id': 11034, 'pId': 11000, 'name': 'Guanine nucleotide-binding protein subunit gamma 1/2: 4 entries', 't': 'Guanine nucleotide-binding protein subunit gamma 1/2', 'y': 'protein'},
+{'id': 11035, 'pId': 11000, 'name': 'Selenoprotein, Rdx-type: 3 entries', 't': 'Selenoprotein, Rdx-type', 'y': 'protein'},
+{'id': 11036, 'pId': 11000, 'name': 'Ubiquitin ligases and GTPase regulators: 3 entries', 't': 'Ubiquitin ligases and GTPase regulators', 'y': 'protein'},
+{'id': 11037, 'pId': 11000, 'name': 'Chitin Synthase Regulator: 3 entries', 't': 'Chitin Synthase Regulator', 'y': 'protein'},
+{'id': 11038, 'pId': 11000, 'name': 'M-factor: 3 entries', 't': 'M-factor', 'y': 'protein'},
+{'id': 11039, 'pId': 11000, 'name': 'Mating hormone A-factor 1/2: 2 entries', 't': 'Mating hormone A-factor 1/2', 'y': 'protein'},
+{'id': 11040, 'pId': 11000, 'name': 'F-actin Monooxygenase Mical: 2 entries', 't': 'F-actin Monooxygenase Mical', 'y': 'protein'},
+{'id': 11041, 'pId': 11000, 'name': 'Casein Kinase 1 Ser/Thr Protein Kinase: 2 entries', 't': 'Casein Kinase 1 Ser/Thr Protein Kinase', 'y': 'protein'},
+{'id': 11042, 'pId': 11000, 'name': 'Heavy metal-associated isoprenylated plant protein 47/16: 2 entries', 't': 'Heavy metal-associated isoprenylated plant protein 47/16', 'y': 'protein'},
+{'id': 11043, 'pId': 11000, 'name': 'Kinesin-like protein: 2 entries', 't': 'Kinesin-like protein', 'y': 'protein'},
+{'id': 11044, 'pId': 11000, 'name': 'Inositol 5-phosphatase: 2 entries', 't': 'Inositol 5-phosphatase', 'y': 'protein'},
+{'id': 11045, 'pId': 11000, 'name': 'DnaJ homolog subfamily B member 2/6-like: 2 entries', 't': 'DnaJ homolog subfamily B member 2/6-like', 'y': 'protein'},
+{'id': 11046, 'pId': 11000, 'name': 'Guanine nucleotide-binding protein G(I)/G(S)/G(O) subunit gamma-13: 2 entries', 't': 'Guanine nucleotide-binding protein G(I)/G(S)/G(O) subunit gamma-13', 'y': 'protein'},
+{'id': 11047, 'pId': 11000, 'name': 'Sif: 1 entries', 't': 'Sif', 'y': 'protein'},
+{'id': 11048, 'pId': 11000, 'name': 'Ras-related protein Rab: 1 entries', 't': 'Ras-related protein Rab', 'y': 'protein'},
+{'id': 11049, 'pId': 11000, 'name': 'Sorting nexin-4: 1 entries', 't': 'Sorting nexin-4', 'y': 'protein'},
+{'id': 11050, 'pId': 11000, 'name': 'Tetraspanin/Peripherin: 1 entries', 't': 'Tetraspanin/Peripherin', 'y': 'protein'},
+{'id': 11051, 'pId': 11000, 'name': 'Ubiquitin carboxyl-terminal hydrolase: 1 entries', 't': 'Ubiquitin carboxyl-terminal hydrolase', 'y': 'protein'},
+{'id': 11052, 'pId': 11000, 'name': 'Heavy metal-associated isoprenylated plant protein 46: 1 entries', 't': 'Heavy metal-associated isoprenylated plant protein 46', 'y': 'protein'},
+{'id': 11053, 'pId': 11000, 'name': 'Notch signaling pathway: 1 entries', 't': 'Notch signaling pathway', 'y': 'protein'},
+{'id': 11054, 'pId': 11000, 'name': 'Mono-ADP-ribosyltransferase and antiviral protein: 1 entries', 't': 'Mono-ADP-ribosyltransferase and antiviral protein', 'y': 'protein'},
+{'id': 11055, 'pId': 11000, 'name': 'MINDY deubiquitinase: 1 entries', 't': 'MINDY deubiquitinase', 'y': 'protein'},
+{'id': 11056, 'pId': 11000, 'name': 'Mating factor A1: 1 entries', 't': 'Mating factor A1', 'y': 'protein'},
+{'id': 11057, 'pId': 11000, 'name': 'Inverted formin-2: 1 entries', 't': 'Inverted formin-2', 'y': 'protein'},
+{'id': 11058, 'pId': 11000, 'name': 'Heavy metal-associated isoprenylated plant protein 9-like: 1 entries', 't': 'Heavy metal-associated isoprenylated plant protein 9-like', 'y': 'protein'},
+{'id': 11059, 'pId': 11000, 'name': 'Flavoprotein WrbA-like: 1 entries', 't': 'Flavoprotein WrbA-like', 'y': 'protein'},
+{'id': 11060, 'pId': 11000, 'name': 'Dimethylallyltransferase: 1 entries', 't': 'Dimethylallyltransferase', 'y': 'protein'},
+{'id': 11061, 'pId': 11000, 'name': 'DDB1- and CUL4-associated factor 8-like: 1 entries', 't': 'DDB1- and CUL4-associated factor 8-like', 'y': 'protein'},
+{'id': 11062, 'pId': 11000, 'name': 'Cytochrome P450: 1 entries', 't': 'Cytochrome P450', 'y': 'protein'},
+{'id': 11063, 'pId': 11000, 'name': 'Centromere protein Cenp-F: 1 entries', 't': 'Centromere protein Cenp-F', 'y': 'protein'},
+{'id': 11064, 'pId': 11000, 'name': 'CAAX box protein 1: 1 entries', 't': 'CAAX box protein 1', 'y': 'protein'},
+{'id': 11065, 'pId': 11000, 'name': 'Annexin: 1 entries', 't': 'Annexin', 'y': 'protein'},
+{'id': 11066, 'pId': 11000, 'name': 'Ureidoglycolate lyase: 1 entries', 't': 'Ureidoglycolate lyase', 'y': 'protein'},
+	<!-- disease -->
+	{"id": 16, "pId": 2, "name": "By Disease Tissue/Cell", "t": "By Disease"},
+	{"id": 17, "pId": 2, "name": "By Disease Ontology", "t": "By Disease"},
+	<!--Tissue/Cell-->
+	{'id': 18, 'pId': 16, 'name': 'rod and cone photoreceptor cells: 5 entries', 't': 'rod and cone photoreceptor cells', 'y': 'disease'}, 
+	{'id': 19, 'pId': 16, 'name': 'human fibroblasts: 5 entries', 't': 'human fibroblasts', 'y': 'disease'}, 
+	{'id': 20, 'pId': 16, 'name': 'macrophages: 3 entries', 't': 'macrophages', 'y': 'disease'}, 
+	{'id': 21, 'pId': 16, 'name': 'hemizygous Rpgrko males: 3 entries', 't': 'hemizygous Rpgrko males', 'y': 'disease'}, 
+	{'id': 22, 'pId': 16, 'name': 'THP-1 cells: 1 entries', 't': 'THP-1 cells', 'y': 'disease'}, 
+	{'id': 23, 'pId': 16, 'name': 'Pggt1bΔCD4 mice: 1 entries', 't': 'Pggt1bΔCD4 mice', 'y': 'disease'}, 
+	{'id': 24, 'pId': 16, 'name': 'mouse models of HGPS（Hutchinson-Gilford progeria syndrome）: 1 entries', 't': 'mouse models of HGPS（Hutchinson-Gilford progeria syndrome）', 'y': 'disease'}, 
+	{'id': 25, 'pId': 16, 'name': 'mouse cardiomyocytes: 1 entries', 't': 'mouse cardiomyocytes', 'y': 'disease'}, 
+	{'id': 26, 'pId': 16, 'name': 'mouse: 1 entries', 't': 'mouse', 'y': 'disease'}, 
+	{'id': 27, 'pId': 16, 'name': 'MDA-MB-231 cells: 1 entries', 't': 'MDA-MB-231 cells', 'y': 'disease'}, 
+	{'id': 28, 'pId': 16, 'name': 'Hutchinson-Gilford progeria fibroblasts: 1 entries', 't': 'Hutchinson-Gilford progeria fibroblasts', 'y': 'disease'}, 
+	{'id': 29, 'pId': 16, 'name': 'human chronic lymphocytic leukemia cells: 1 entries', 't': 'human chronic lymphocytic leukemia cells', 'y': 'disease'}, 
+	{'id': 30, 'pId': 16, 'name': 'HeLa cells: 1 entries', 't': 'HeLa cells', 'y': 'disease'}, 
+	{'id': 31, 'pId': 16, 'name': 'Arabidopsis thaliana (L.) Heynh: 1 entries', 't': 'Arabidopsis thaliana (L.) Heynh', 'y': 'disease'}, 
+	{'id': 32, 'pId': 16, 'name': '(C3H/HeJ X A/J) F1 hybrid mice: 1 entries', 't': '(C3H/HeJ X A/J) F1 hybrid mice', 'y': 'disease'},
+	<!--DO-->
+	{'id': 33, 'pId': 17, 'name': 'progeria: 9 entries', 't': 'progeria', 'y': 'disease'}, 
+	{'id': 34, 'pId': 17, 'name': 'choroideremia: 5 entries', 't': 'choroideremia', 'y': 'disease'}, 
+	{'id': 35, 'pId': 17, 'name': 'retinitis pigmentosa: 3 entries', 't': 'retinitis pigmentosa', 'y': 'disease'}, 
+	{'id': 36, 'pId': 17, 'name': 'restrictive dermopathy: 2 entries', 't': 'restrictive dermopathy', 'y': 'disease'}, 
+	{'id': 37, 'pId': 17, 'name': 'viral infectious disease: 2 entries', 't': 'viral infectious disease', 'y': 'disease'}, 
+	{'id': 38, 'pId': 17, 'name': 'cancer: 2 entries', 't': 'cancer', 'y': 'disease'}, 
+	{'id': 39, 'pId': 17, 'name': 'lung cancer: 2 entries', 't': 'lung cancer', 'y': 'disease'}, 
+	{'id': 40, 'pId': 17, 'name': 'colon cancer: 1 entries', 't': 'colon cancer', 'y': 'disease'}, 
+	{'id': 41, 'pId': 17, 'name': 'congestive heart failure: 1 entries', 't': 'congestive heart failure', 'y': 'disease'}, 
+	{'id': 42, 'pId': 17, 'name': 'congenital stationary night blindness autosomal dominant 3: 1 entries', 't': 'congenital stationary night blindness autosomal dominant 3', 'y': 'disease'}, 
+	{'id': 43, 'pId': 17, 'name': 'congenital stationary night blindness autosomal dominant 2: 1 entries', 't': 'congenital stationary night blindness autosomal dominant 2', 'y': 'disease'}, 
+	{'id': 44, 'pId': 17, 'name': 'congenital stationary night blindness autosomal dominant 1: 1 entries', 't': 'congenital stationary night blindness autosomal dominant 1', 'y': 'disease'}, 
+	{'id': 45, 'pId': 17, 'name': 'werner syndrome: 1 entries', 't': 'werner syndrome', 'y': 'disease'}, 
+	{'id': 46, 'pId': 17, 'name': 'chronic lymphocytic leukemia: 1 entries', 't': 'chronic lymphocytic leukemia', 'y': 'disease'}, 
+	{'id': 47, 'pId': 17, 'name': 'heart disease: 1 entries', 't': 'heart disease', 'y': 'disease'}, 
+	{'id': 48, 'pId': 17, 'name': 'carpenter syndrome: 1 entries', 't': 'carpenter syndrome', 'y': 'disease'}, 
+	{'id': 49, 'pId': 17, 'name': 'breast cancer: 1 entries', 't': 'breast cancer', 'y': 'disease'}, 
+	{'id': 50, 'pId': 17, 'name': 'Bardet-Biedl syndrome: 1 entries', 't': 'Bardet-Biedl syndrome', 'y': 'disease'}, 
+	{'id': 51, 'pId': 17, 'name': 'arthritis: 1 entries', 't': 'arthritis', 'y': 'disease'}, 
+	{'id': 52, 'pId': 17, 'name': 'familial partial lipodystrophy: 1 entries', 't': 'familial partial lipodystrophy', 'y': 'disease'}, 
+	{'id': 53, 'pId': 17, 'name': 'Joubert syndrome 32: 1 entries', 't': 'Joubert syndrome 32', 'y': 'disease'}, 
+	{'id': 54, 'pId': 17, 'name': 'immune system disease: 1 entries', 't': 'immune system disease', 'y': 'disease'}, 
+	{'id': 55, 'pId': 17, 'name': 'inflammatory bowel disease: 1 entries', 't': 'inflammatory bowel disease', 'y': 'disease'}, 
+	{'id': 56, 'pId': 17, 'name': 'laminopathies: 1 entries', 't': 'laminopathies', 'y': 'disease'}, 
+	{'id': 57, 'pId': 17, 'name': 'mandibuloacral dysplasia: 1 entries', 't': 'mandibuloacral dysplasia', 'y': 'disease'}, 
+	{'id': 58, 'pId': 17, 'name': 'mandibuloacral dysplasia type A lipodystrophy: 1 entries', 't': 'mandibuloacral dysplasia type A lipodystrophy', 'y': 'disease'}, 
+	{'id': 59, 'pId': 17, 'name': 'mandibuloacral dysplasia type B lipodystrophy: 1 entries', 't': 'mandibuloacral dysplasia type B lipodystrophy', 'y': 'disease'}, 
+	{'id': 60, 'pId': 17, 'name': 'mevalonic aciduria: 1 entries', 't': 'mevalonic aciduria', 'y': 'disease'}, 
+	{'id': 61, 'pId': 17, 'name': 'neurodegenerative disease: 1 entries', 't': 'neurodegenerative disease', 'y': 'disease'}, 
+	{'id': 62, 'pId': 17, 'name': 'neurodevelopmental defects and striking nuclear abnormalities in neurons: 1 entries', 't': 'neurodevelopmental defects and striking nuclear abnormalities in neurons', 'y': 'disease'}, 
+	{'id': 63, 'pId': 17, 'name': 'pancreatic cancer: 1 entries', 't': 'pancreatic cancer', 'y': 'disease'}, 
+	{'id': 64, 'pId': 17, 'name': 'progeroid syndrome: 1 entries', 't': 'progeroid syndrome', 'y': 'disease'}, 
+	{'id': 65, 'pId': 17, 'name': 'reduces the efficiency of intracellular multiplication of tobamoviruses.: 1 entries', 't': 'reduces the efficiency of intracellular multiplication of tobamoviruses.', 'y': 'disease'}, 
+	{'id': 66, 'pId': 17, 'name': 'respiratory syncytial virus infectious disease: 1 entries', 't': 'respiratory syncytial virus infectious disease', 'y': 'disease'}, 
+	{'id': 67, 'pId': 17, 'name': 'achromatopsia: 1 entries', 't': 'achromatopsia', 'y': 'disease'},
+	<!-- enzyme -->
+	{'id': 68, 'pId': 3, 'name': 'FTase: 64 entries', 't': 'FTase', 'y': 'enzyme'},
+	{'id': 69, 'pId': 3, 'name': 'GGTase 1: 51 entries', 't': 'GGTase 1', 'y': 'enzyme'},
+	{'id': 70, 'pId': 3, 'name': 'GGTase 2: 44 entries', 't': 'GGTase 2', 'y': 'enzyme'},
+	{'id': 71, 'pId': 3, 'name': 'GGTase 3: 5 entries', 't': 'GGTase 3', 'y': 'enzyme'},
+	{'id': 72, 'pId': 3, 'name': 'Tryptophan prenyltransferase ComQ: 3 entries', 't': 'Tryptophan prenyltransferase ComQ', 'y': 'enzyme'},
+	{'id': 73, 'pId': 3, 'name': 'Protoheme IX farnesyltransferase: 1 entries', 't': 'Protoheme IX farnesyltransferase', 'y': 'enzyme'},
+	{'id': 74, 'pId': 3, 'name': 'KgpF: 1 entries', 't': 'KgpF', 'y': 'enzyme'},
+	<!-- inhibitor -->
+	{"id": 14, "pId": 4, "name": "circRNA-mRNA interactions: 12 entries", "t": "circRNA-mRNA", "y": "Interaction-Type"}, 
+	{"id": 15, "pId": 4, "name": "circRNA-miRNA interactions: 296 entries", "t": "circRNA-miRNA", "y": "Interaction-Type"}, 
+	<!-- compound -->
+];
+zNodes = zNodes.sort(function(a, b){
+	if (a.pId == 0 || a.pId ==1){
+		return a.id-b.id;
+	}
+	else{
+		return a.name.localeCompare(b.name);
+	}
+});
+function beforeDblClick(treeId, treeNode) {
+	return false;
+}
+function setFontCss(treeId, treeNode) {
+	return treeNode.level == 0 ? {
+		"font-weight": "bold"
+	} : {};
+}
+function onClick(e, treeId, treeNode) {
+	var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+	zTree.expandNode(treeNode);
+}
+function beforeClick(treeId, treeNode) {
+	if (qType.indexOf(treeNode.y) > -1) {
+		var myForm = document.createElement("form");
+		myForm.method = "POST"; 
+		myForm.action = "{% url 'ppm:browse' %}";
+		var myInput = document.createElement("input");
+		myInput.type = "hidden";
+		myInput.name = "csrfmiddlewaretoken";
+		myInput.value = "{{ csrf_token }}";
+		myForm.appendChild(myInput);
+		myInput = document.createElement("input"); 
+		myInput.setAttribute("name", "searchType");
+		myInput.setAttribute("value", treeNode.y);
+		myInput.setAttribute("type", "hidden");
+		myForm.appendChild(myInput);
+		myInput = document.createElement("input"); 
+		myInput.setAttribute("name", "searchTerm");
+		myInput.setAttribute("value", treeNode.t);
+		myInput.setAttribute("type", "hidden");
+		myForm.appendChild(myInput);
+		document.body.appendChild(myForm); 
+		myForm.submit(); 
+		document.body.removeChild(myForm);
+		$('#loading-btn').modal({
+			backdrop: 'static',
+			keyboard: false,
+			show: true,
+		});
+	}
+}
+$(document).ready(function() {
+	$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends "./base.html" %} 
+{% load static %}
+{% block style %} 
+<link rel="stylesheet" href="{% static 'home/css/xenon-core.css' %}">
+<style>
+html {overflow-x: hidden;}
+.panel {padding: 0 !important;}
+.panel-group .panel .panel-heading .panel-title {
+	padding: 0 !important;
+    font-weight: bolder;
+}
+.panel .panel-body {
+	padding: 0;
+	padding-top: 10px;
+}
+.panel .panel-heading>.panel-title>a {
+	padding: 17px !important;
+    text-decoration: none;
+	border: solid 2px #00356b;
+	border-radius: 4px;
+}
+.panel-group .panel .panel-heading+.panel-collapse .panel-body {
+	margin-top: 0 !important;
+    padding: 20px;
+    border: 1px solid #9c9d9e;
+    border-top: 0 !important;
+}
+.panel .panel-heading>.panel-title>a:hover {
+	color: #00356b !important;
+}
+.panel-body>li{
+	color: black;
+}
+
+table th {
+	border: 1px solid #f2f3f3;
+	font-size:17px;
+	color:#343a40;
+	text-align: center;
+    background-color: #c4e3f3;
+	border: 1px solid #ddd;
+}
+td{
+	padding-left: 10px;
+	font-size: 17px;
+	font-style: normal;
+	word-wrap:break-word;
+	word-break:break-all;
+	padding-top: 10px;
+	padding-bottom: 10px;	
+	padding-right: 10px;
+	background: white;
+	border: 1px solid #ddd;
+}
+td>a{
+	text-decoration:none !important;
+	color: black;
+}
+</style>
+{% endblock %} 
+{% block main %} 
+<nav aria-label="breadcrumb" class="mt-2">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item align-items-center"><i class="fas fa-home" style="padding-right:15px"></i>Detail Information</li>
+        <li class="breadcrumb-item active" aria-current="page">Enzyme</li>
+    </ol>
+</nav>
+<div class="mt-2" style="margin-bottom:25px">
+    <div class="card border-danger mt-2" style="padding-left:15px;padding-top:15px">
+        <p style="cursor:pointer;width: 100px;" onclick="javascript:history.back(-1);">
+			<span style="font-style: normal"><img src="{% static 'common/images/back.png' %}" alt="download-search" class="small_icons" style="margin-bottom: 4px;margin-right: 7px;width: 14px;height: 14px;">
+				<b style="font-size: 16px;color: #00356b;">Go Back</b>
+			</span>
+		</p>
+		<p><b style="font-size: 22px;color: #00356b;">Basic Information</b></p>
+		<section style="margin-bottom: 0px;margin-right:20px">
+			<table frame="void" width="100%" id="base_table" style="margin-bottom:15px;border: 1px solid #ddd;">
+				<tbody>
+					<tr>
+						<th>Enzyme</th>
+						<td colspan="3">{{enzyme.ptase}}</td>
+						
+					</tr>
+					<tr>
+						<th>Organism</th>
+						<td colspan="3">{{enzyme.organism}}</td>
+					</tr>
+					<tr>
+						<th rowspan="{{total}}">subnet</th>
+						<th style="padding: 10px 0">Gene Symbol</th>
+						<th>Uniport</th>
+						<th>Uniport</th>
+					</tr>
+					{% for gene in enzyme.gene_symbol %}
+					{% with forloop.counter|cut:" " as index %}
+						<tr>
+							<td style="text-align:center">{{gene}}</td>
+							<td style="text-align:center"><a href="https://www.uniprot.org/uniprotkb/{{enzyme.uniport_id|slice:index|last}}/entry" target="_blank">{{enzyme.uniport_id|slice:index|last}}</a></td>
+							<td style="text-align:center">{{gene}}</td>
+						</tr>
+					{% endwith %}
+					{% endfor %}
+				</tbody>
+			</table>
+		</section>
+    </div>
+</div>
+<div class="modal fade" id="loading-btn" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+	 aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content border-0" style="background: none;">
+			<div class="modal-body text-center" style="background: none;">
+				<div class="load">
+					<hr/>
+					<hr/>
+					<hr/>
+					<hr/>
+				</div>
+				<h2 style="color: white">Please Wait...</h2>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{% static 'home/js/bootstrap.min.js' %}"></script>
+{% endblock %}

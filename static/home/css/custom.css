@@ -1,0 +1,207 @@
+/**
+ *
+ * Apply your custom CSS here
+ *
+*/
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    background-color: #ffffff;
+}
+
+.xe-widget.xe-status-update {
+    padding: 14px 0 10px 11px;
+}
+
+.xe-widget {
+    border-radius: 15px;
+}
+
+.label.pull-right {
+    margin-top: -24px !important;
+    width: 154px;
+}
+
+@media (max-width: 780px) {
+    .topp {
+        margin: 38px 0 58px 0 !important;
+    }
+
+    .page-container {
+        display: inline !important;
+    }
+}
+
+@media (max-width: 1000px) {
+    .label.pull-right {
+        margin-top: 15px !important;
+    }
+
+    .xe-widget.xe-status-update {
+        padding-left: 29px;
+    }
+
+    .label.pull-right {
+        margin-left: 0 !important;
+    }
+
+    .xe-widget.xe-status-update .xe-body li .status-date {
+        text-align: left;
+    }
+}
+.xe-widget.xe-status-update .xe-body li .status-date {
+    padding-right: 13px;
+    color: #fff;
+    font-weight: bolder;
+}
+
+input {
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 20px;
+}
+
+input:focus {
+    outline: none;
+    /*border-color: #ccc;*/
+    box-shadow: 0 0 5px rgba(50, 33, 23, 0);
+    border: 1px solid #ccc;
+}
+
+.news_li a,
+.swap a {
+    color: #908f8f;
+}
+
+#input-test::-webkit-input-placeholder {
+    color: #ccc;
+    font-size: 19px;
+}
+
+#input-text::-moz-placeholder {
+    color: #ccc;
+    font-size: 19px;
+}
+
+#input-text:-ms-input-placeholder {
+    color: #ccc;
+    font-size: 19px;
+}
+
+#input-text:-moz-placeholder {
+    color: #ccc;
+    font-size: 19px;
+}
+.btn-primary {
+    color: #000000;
+    background-color: #e8e8e8 !important;
+    border-color: #b5b5b5 !important;
+    border-left: 0;
+}
+
+.btn-primary:focus {
+    color: #000000;
+    background-color: #e8e8e8 !important;
+    border: 1px solid #b5b5b5 !important;
+}
+
+.btn-primary:hover {
+    color: #000000 !important;
+}
+
+.t_news {
+    padding-left: 45px;
+    font-size: 15px;
+}
+
+@media (max-width: 780px) {
+    .box {
+        display: none;
+    }
+
+    .myscroll {
+        display: block !important;
+    }
+}
+.dropdown-menu > li > a {
+    padding: 9px 20px !important;
+    font-size: 16px !important
+}
+
+.btn {
+    padding: 13px 12px;
+    font-size: 17px !important;
+}
+
+.bootstrap-select > .dropdown-toggle {
+    /*border: 1px solid #b5b5b5 !important;*/
+    border-radius: 8px 0 0 8px;
+    border-right: 0;
+    margin-bottom: 0 !important;
+    background-color: #e8e8e8 !important;
+    color: #000000 !important;
+}
+
+.bootstrap-select > .dropdown-toggle:focus {
+    /*-webkit-tap-highlight-color: rgba(0, 0, 0, 0);*/
+    /*-webkit-user-modify: read-write-plaintext-only;*/
+    outline: none !important;
+    outline: 0 !important;
+}
+
+.biaoqian {
+    background-color: #e8e8e8 !important;
+    color: #000 !important;
+    border-radius: 30px 0 0 30px;
+}
+
+.status-date {
+    text-align: right;
+}
+
+.btn {
+    margin-bottom: 0 !important;
+    border-radius: 0 8px 8px 0;
+}
+.image {
+    position: relative;
+    overflow: hidden;
+}
+
+em {
+    position: absolute;
+    display: block;
+    width: 200px;
+    height: 450px;
+    background: #fff;
+    top: 0;
+    left: -400px;
+    translate: -webkit-transform: skewY(25deg);
+    -moz-transform: skewX(-25deg);
+    -ms-transform: skewX(-25deg);
+    -o-transform: skewX(-25deg);
+    transform: skewX(-25deg);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+-moz-linear-gradient(0 deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+-webkit-linear-gradient(0 deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+-o-linear-gradient(0 deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+}
+
+.image:hover em {
+    left: 400px;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.xe-widget.xe-status-update {
+    height: 137px !important;
+}
+
+.xe-widget.xe-status-update .xe-header .xe-icon {
+    padding-bottom: 1px !important;
+}

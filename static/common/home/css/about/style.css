@@ -1,0 +1,38 @@
+.highlight-area {
+    text-align: justify;
+    /*color: rgba(64, 63, 76, .8);*/
+}
+
+.highlight-title .title {
+    font-size: 4rem;
+    font-weight: 300;
+    font-family: "Poppins", sans-serif;
+    color: #0771B8;
+}
+
+.highlight-area img {
+    max-height: 286px;
+    max-width: 286px;
+}
+
+.highlight-area .media-body h5 {
+    /*color: rgba(64, 63, 76, .9);*/
+    /*fonts-variant: small-caps;*/
+}
+
+.highlight-area h5 {
+    font-size: 1.6rem;
+    font-weight: 400;
+}
+
+.highlight-area p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.disc-text {
+    font-size: 1.1rem;
+}

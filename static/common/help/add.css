@@ -1,0 +1,9 @@
+.affix-add {
+    position: absolute;
+    top: auto;
+    bottom: auto;
+}
+
+.affix-add-bottom {
+    position: absolute;
+}
